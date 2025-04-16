@@ -1,0 +1,90 @@
+{
+	"name": "PL_BLOB_TO_SNOWFLAKE",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('csvList')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "SnowflakeV2Sink",
+									"importSettings": {
+										"type": "SnowflakeImportCopyCommand"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "CsvBlobDynamic",
+									"type": "DatasetReference",
+									"parameters": {
+										"fileName": "@item()"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SnowflakeDynamic",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@toUpper(replace(item(), '.csv', ''))\n",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"csvList": {
+				"type": "Array",
+				"defaultValue": [
+					"raw_campaigns.csv",
+					"raw_leads.csv",
+					"raw_spend.csv",
+					"raw_channels.csv",
+					"raw_revenue.csv"
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-04-16T08:54:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

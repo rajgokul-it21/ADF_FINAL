@@ -1,0 +1,9 @@
+{
+	"name": "marketingDataFactoryFinal",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "26b50c67-0037-422e-9f00-26279be5ec30",
+		"tenantId": "0943ce5c-6d16-4e14-b5b8-4263b7d26764"
+	}
+}
